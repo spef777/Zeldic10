@@ -1,13 +1,69 @@
-import React from 'react';
-import { Phone, Mail, Globe, Instagram, Facebook, MessageCircle, Send } from 'lucide-react';
+import React, { useState } from 'react';
+import { Phone, Mail, Globe, Instagram, Facebook, MessageCircle, Send, CheckCircle2 } from 'lucide-react';
 import ScrollReveal from './ScrollReveal';
 
 const Contact: React.FC = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    service: 'Social Media Marketing',
+    message: ''
+  });
+  
+  const [status, setStatus] = useState<'idle' | 'sending' | 'success'>('idle');
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setStatus('sending');
+
+    // Constructing the mailto link
+    const subject = encodeURIComponent(`New Project Inquiry: ${formData.service} - ${formData.name}`);
+    const body = encodeURIComponent(
+      `Name: ${formData.name}\n` +
+      `Email: ${formData.email}\n` +
+      `Service Interest: ${formData.service}\n\n` +
+      `Message:\n${formData.message}`
+    );
+    
+    const mailtoLink = `mailto:contact@zeldic.com?subject=${subject}&body=${body}`;
+    
+    // Simulate a brief loading state for better UX feel
+    setTimeout(() => {
+      window.location.href = mailtoLink;
+      setStatus('success');
+      
+      // Reset form after a delay
+      setTimeout(() => {
+        setStatus('idle');
+        setFormData({
+          name: '',
+          email: '',
+          service: 'Social Media Marketing',
+          message: ''
+        });
+      }, 3000);
+    }, 800);
+  };
+
   return (
     <section id="contact" className="py-24 relative scroll-mt-20">
       <div className="container mx-auto px-6">
         <ScrollReveal direction="up" duration={1.0}>
-          <div className="glass-panel rounded-3xl overflow-hidden p-8 md:p-12">
+          <div className="glass-panel rounded-3xl overflow-hidden p-8 md:p-12 relative">
+            {/* Success Overlay */}
+            {status === 'success' && (
+              <div className="absolute inset-0 z-50 bg-black/80 backdrop-blur-md flex flex-col items-center justify-center text-center p-6 animate-fade-in">
+                <CheckCircle2 size={64} className="text-violet-500 mb-4 animate-bounce" />
+                <h4 className="text-2xl font-bold text-white mb-2">Message Prepared!</h4>
+                <p className="text-gray-400 max-w-sm">Your email client has been opened with your inquiry. Just hit send in your mail app!</p>
+              </div>
+            )}
+
             <div className="grid md:grid-cols-2 gap-12">
               
               {/* Contact Info (Left) */}
@@ -58,39 +114,72 @@ const Contact: React.FC = () => {
                 </div>
               </div>
 
-              {/* Minimal Form (Right) */}
+              {/* Functional Form (Right) */}
               <div className="flex flex-col justify-center">
-                 <form className="space-y-4">
-                   <div className="grid grid-cols-2 gap-4">
+                 <form onSubmit={handleSubmit} className="space-y-4">
+                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                      <div className="space-y-2">
                        <label className="text-sm text-gray-400 ml-1">Name</label>
-                       <input type="text" className="w-full px-4 py-3 rounded-xl input-glass text-white placeholder-gray-500 transition-all" placeholder="John Doe" />
+                       <input 
+                         required
+                         type="text" 
+                         name="name"
+                         value={formData.name}
+                         onChange={handleChange}
+                         className="w-full px-4 py-3 rounded-xl input-glass text-white placeholder-gray-500 transition-all" 
+                         placeholder="John Doe" 
+                       />
                      </div>
                      <div className="space-y-2">
                        <label className="text-sm text-gray-400 ml-1">Email</label>
-                       <input type="email" className="w-full px-4 py-3 rounded-xl input-glass text-white placeholder-gray-500 transition-all" placeholder="john@example.com" />
+                       <input 
+                         required
+                         type="email" 
+                         name="email"
+                         value={formData.email}
+                         onChange={handleChange}
+                         className="w-full px-4 py-3 rounded-xl input-glass text-white placeholder-gray-500 transition-all" 
+                         placeholder="john@example.com" 
+                       />
                      </div>
                    </div>
                    
                    <div className="space-y-2">
                      <label className="text-sm text-gray-400 ml-1">Service Interest</label>
-                     <select className="w-full px-4 py-3 rounded-xl input-glass text-white bg-black/50 transition-all appearance-none cursor-pointer">
-                       <option>Social Media Marketing</option>
-                       <option>Web Development</option>
-                       <option>SEO / SEM</option>
-                       <option>Branding</option>
-                       <option>Other</option>
+                     <select 
+                       name="service"
+                       value={formData.service}
+                       onChange={handleChange}
+                       className="w-full px-4 py-3 rounded-xl input-glass text-white bg-[#0a0a0a] transition-all appearance-none cursor-pointer"
+                     >
+                       <option value="Social Media Marketing">Social Media Marketing</option>
+                       <option value="Web Development">Web Development</option>
+                       <option value="SEO / SEM">SEO / SEM</option>
+                       <option value="Branding">Branding</option>
+                       <option value="Other">Other</option>
                      </select>
                    </div>
 
                    <div className="space-y-2">
                      <label className="text-sm text-gray-400 ml-1">Message</label>
-                     <textarea rows={4} className="w-full px-4 py-3 rounded-xl input-glass text-white placeholder-gray-500 transition-all resize-none" placeholder="Tell us about your project..."></textarea>
+                     <textarea 
+                       required
+                       name="message"
+                       value={formData.message}
+                       onChange={handleChange}
+                       rows={4} 
+                       className="w-full px-4 py-3 rounded-xl input-glass text-white placeholder-gray-500 transition-all resize-none" 
+                       placeholder="Tell us about your project..."
+                     ></textarea>
                    </div>
 
-                   <button type="submit" className="w-full py-4 bg-white hover:bg-gray-200 text-black font-bold rounded-xl transition-all flex items-center justify-center gap-2 mt-4">
-                     <span>Send Message</span>
-                     <Send size={18} />
+                   <button 
+                     type="submit" 
+                     disabled={status === 'sending'}
+                     className={`w-full py-4 bg-white hover:bg-gray-200 text-black font-bold rounded-xl transition-all flex items-center justify-center gap-2 mt-4 ${status === 'sending' ? 'opacity-70 cursor-wait' : ''}`}
+                   >
+                     <span>{status === 'sending' ? 'Preparing Email...' : 'Send Message'}</span>
+                     <Send size={18} className={status === 'sending' ? 'animate-pulse' : ''} />
                    </button>
                  </form>
               </div>
