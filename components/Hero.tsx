@@ -17,7 +17,6 @@ const AnimatedText: React.FC<AnimatedTextProps> = ({ text, className = "", delay
       {words.map((word, wordIndex) => (
         <span key={wordIndex} className="inline-block whitespace-nowrap">
           {Array.from(word).map((char, charIndex) => {
-            // Calculate global index for delay
             const prevWordsLength = words.slice(0, wordIndex).join("").length + wordIndex;
             const globalIndex = prevWordsLength + charIndex;
             
@@ -31,7 +30,6 @@ const AnimatedText: React.FC<AnimatedTextProps> = ({ text, className = "", delay
                   transform: 'translateY(10px)',
                   animation: 'heroFadeInUp 0.6s cubic-bezier(0.2, 0.65, 0.3, 0.9) forwards',
                   animationDelay: `${delay + (globalIndex * 0.03)}s`,
-                  // Crucial for mobile visibility of gradient text
                   WebkitBackgroundClip: useGradient ? 'text' : 'unset',
                   backgroundClip: useGradient ? 'text' : 'unset',
                 }}
@@ -40,7 +38,6 @@ const AnimatedText: React.FC<AnimatedTextProps> = ({ text, className = "", delay
               </span>
             );
           })}
-          {/* Add space after word if it's not the last word */}
           {wordIndex < words.length - 1 && (
             <span style={{ display: 'inline-block' }}>&nbsp;</span>
           )}
@@ -60,10 +57,39 @@ const Hero: React.FC = () => {
             transform: translateY(0);
           }
         }
+        @keyframes blob-float {
+          0%, 100% { transform: translate(0, 0) scale(1); }
+          33% { transform: translate(30px, -50px) scale(1.1); }
+          66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
+        @keyframes blob-pulse {
+          0%, 100% { opacity: 0.1; transform: scale(1); }
+          50% { opacity: 0.2; transform: scale(1.2); }
+        }
+        @keyframes blob-drift {
+          0% { transform: translate(-10%, -10%); }
+          50% { transform: translate(10%, 10%); }
+          100% { transform: translate(-10%, -10%); }
+        }
       `}</style>
 
-      {/* Decorative Glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[250px] md:w-[400px] h-[250px] md:h-[400px] bg-violet-600/10 blur-[80px] md:blur-[120px] rounded-full"></div>
+      {/* Hero-Specific Background Blobs */}
+      <div className="absolute inset-0 pointer-events-none z-0">
+        {/* Central Large Glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] md:w-[600px] h-[300px] md:h-[600px] bg-violet-600/15 blur-[100px] md:blur-[150px] rounded-full animate-[blob-pulse_10s_infinite_ease-in-out]"></div>
+        
+        {/* Top-Left Violet Blob */}
+        <div className="absolute -top-20 -left-20 w-[250px] md:w-[450px] h-[250px] md:h-[450px] bg-indigo-600/10 blur-[90px] md:blur-[130px] rounded-full animate-[blob-float_15s_infinite_ease-in-out]"></div>
+        
+        {/* Bottom-Right Fuchsia Blob */}
+        <div className="absolute bottom-10 -right-20 w-[200px] md:w-[400px] h-[200px] md:h-[400px] bg-fuchsia-600/10 blur-[80px] md:blur-[120px] rounded-full animate-[blob-float_12s_infinite_linear_reverse]"></div>
+        
+        {/* Middle-Right Purple Accent */}
+        <div className="absolute top-1/3 right-1/4 w-[150px] md:w-[300px] h-[150px] md:h-[300px] bg-purple-500/10 blur-[70px] md:blur-[110px] rounded-full animate-[blob-drift_20s_infinite_ease-in-out]"></div>
+        
+        {/* Bottom-Left Deep Violet Accent */}
+        <div className="absolute bottom-1/4 left-1/4 w-[180px] md:w-[350px] h-[180px] md:h-[350px] bg-violet-900/10 blur-[80px] md:blur-[140px] rounded-full animate-[blob-pulse_8s_infinite_reverse]"></div>
+      </div>
 
       <div className="relative z-10 max-w-4xl mx-auto space-y-6 md:space-y-10">
         <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold tracking-tight leading-[1.1] md:leading-tight">
