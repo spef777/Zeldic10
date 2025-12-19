@@ -21,23 +21,28 @@ const Contact: React.FC = () => {
     e.preventDefault();
     setStatus('sending');
 
-    // Constructing the mailto link
-    const subject = encodeURIComponent(`New Project Inquiry: ${formData.service} - ${formData.name}`);
+    // Constructing the mailto link for contact@zeldic.com
+    const subject = encodeURIComponent(`Project Inquiry: ${formData.service} from ${formData.name}`);
     const body = encodeURIComponent(
+      `Customer Details:\n` +
+      `------------------\n` +
       `Name: ${formData.name}\n` +
       `Email: ${formData.email}\n` +
-      `Service Interest: ${formData.service}\n\n` +
-      `Message:\n${formData.message}`
+      `Interested in: ${formData.service}\n\n` +
+      `Message Details:\n` +
+      `------------------\n` +
+      `${formData.message}\n\n` +
+      `-- Sent via Zeldic Website Contact Form`
     );
     
     const mailtoLink = `mailto:contact@zeldic.com?subject=${subject}&body=${body}`;
     
-    // Simulate a brief loading state for better UX feel
+    // Slight delay for smooth UX transition
     setTimeout(() => {
       window.location.href = mailtoLink;
       setStatus('success');
       
-      // Reset form after a delay
+      // Reset form status after showing success message
       setTimeout(() => {
         setStatus('idle');
         setFormData({
@@ -46,21 +51,30 @@ const Contact: React.FC = () => {
           service: 'Social Media Marketing',
           message: ''
         });
-      }, 3000);
+      }, 5000);
     }, 800);
   };
 
   return (
-    <section id="contact" className="py-24 relative scroll-mt-20">
+    <section id="contact" className="py-24 relative scroll-mt-24">
       <div className="container mx-auto px-6">
         <ScrollReveal direction="up" duration={1.0}>
           <div className="glass-panel rounded-3xl overflow-hidden p-8 md:p-12 relative">
-            {/* Success Overlay */}
+            
+            {/* Form Success Overlay */}
             {status === 'success' && (
-              <div className="absolute inset-0 z-50 bg-black/80 backdrop-blur-md flex flex-col items-center justify-center text-center p-6 animate-fade-in">
-                <CheckCircle2 size={64} className="text-violet-500 mb-4 animate-bounce" />
-                <h4 className="text-2xl font-bold text-white mb-2">Message Prepared!</h4>
-                <p className="text-gray-400 max-w-sm">Your email client has been opened with your inquiry. Just hit send in your mail app!</p>
+              <div className="absolute inset-0 z-50 bg-black/90 backdrop-blur-xl flex flex-col items-center justify-center text-center p-6 transition-all animate-in fade-in zoom-in duration-300">
+                <div className="w-20 h-20 bg-violet-600/20 rounded-full flex items-center justify-center mb-6">
+                  <CheckCircle2 size={48} className="text-violet-500 animate-pulse" />
+                </div>
+                <h4 className="text-3xl font-bold text-white mb-4">Email Drafted!</h4>
+                <p className="text-gray-400 max-w-sm mb-8">Your email app has been opened with your inquiry for <strong>contact@zeldic.com</strong>. Please review and hit send to reach our team!</p>
+                <button 
+                  onClick={() => setStatus('idle')}
+                  className="px-8 py-3 bg-white text-black font-bold rounded-full hover:bg-gray-200 transition-colors"
+                >
+                  Send Another
+                </button>
               </div>
             )}
 
@@ -114,72 +128,79 @@ const Contact: React.FC = () => {
                 </div>
               </div>
 
-              {/* Functional Form (Right) */}
+              {/* Contact Form (Right) */}
               <div className="flex flex-col justify-center">
-                 <form onSubmit={handleSubmit} className="space-y-4">
+                 <form onSubmit={handleSubmit} className="space-y-5">
                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                      <div className="space-y-2">
                        <label className="text-sm text-gray-400 ml-1">Name</label>
                        <input 
-                         required
-                         type="text" 
-                         name="name"
-                         value={formData.name}
-                         onChange={handleChange}
-                         className="w-full px-4 py-3 rounded-xl input-glass text-white placeholder-gray-500 transition-all" 
-                         placeholder="John Doe" 
+                        required
+                        type="text" 
+                        name="name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 rounded-xl input-glass text-white placeholder-gray-500 transition-all" 
+                        placeholder="John Doe" 
                        />
                      </div>
                      <div className="space-y-2">
                        <label className="text-sm text-gray-400 ml-1">Email</label>
                        <input 
-                         required
-                         type="email" 
-                         name="email"
-                         value={formData.email}
-                         onChange={handleChange}
-                         className="w-full px-4 py-3 rounded-xl input-glass text-white placeholder-gray-500 transition-all" 
-                         placeholder="john@example.com" 
+                        required
+                        type="email" 
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 rounded-xl input-glass text-white placeholder-gray-500 transition-all" 
+                        placeholder="john@example.com" 
                        />
                      </div>
                    </div>
                    
                    <div className="space-y-2">
                      <label className="text-sm text-gray-400 ml-1">Service Interest</label>
-                     <select 
-                       name="service"
-                       value={formData.service}
-                       onChange={handleChange}
-                       className="w-full px-4 py-3 rounded-xl input-glass text-white bg-[#0a0a0a] transition-all appearance-none cursor-pointer"
-                     >
-                       <option value="Social Media Marketing">Social Media Marketing</option>
-                       <option value="Web Development">Web Development</option>
-                       <option value="SEO / SEM">SEO / SEM</option>
-                       <option value="Branding">Branding</option>
-                       <option value="Other">Other</option>
-                     </select>
+                     <div className="relative">
+                        <select 
+                          name="service"
+                          value={formData.service}
+                          onChange={handleChange}
+                          className="w-full px-4 py-3 rounded-xl input-glass text-white bg-[#0a0a0a] transition-all appearance-none cursor-pointer pr-10"
+                        >
+                          <option value="Social Media Marketing">Social Media Marketing</option>
+                          <option value="Web Development">Web Development</option>
+                          <option value="SEO / SEM">SEO / SEM</option>
+                          <option value="Branding">Branding</option>
+                          <option value="Other">Other</option>
+                        </select>
+                        <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
+                          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                          </svg>
+                        </div>
+                     </div>
                    </div>
 
                    <div className="space-y-2">
                      <label className="text-sm text-gray-400 ml-1">Message</label>
                      <textarea 
-                       required
-                       name="message"
-                       value={formData.message}
-                       onChange={handleChange}
-                       rows={4} 
-                       className="w-full px-4 py-3 rounded-xl input-glass text-white placeholder-gray-500 transition-all resize-none" 
-                       placeholder="Tell us about your project..."
+                      required
+                      name="message"
+                      value={formData.message}
+                      onChange={handleChange}
+                      rows={5} 
+                      className="w-full px-4 py-3 rounded-xl input-glass text-white placeholder-gray-500 transition-all resize-none" 
+                      placeholder="Tell us about your project or business goals..."
                      ></textarea>
                    </div>
 
                    <button 
-                     type="submit" 
-                     disabled={status === 'sending'}
-                     className={`w-full py-4 bg-white hover:bg-gray-200 text-black font-bold rounded-xl transition-all flex items-center justify-center gap-2 mt-4 ${status === 'sending' ? 'opacity-70 cursor-wait' : ''}`}
+                    type="submit" 
+                    disabled={status === 'sending'}
+                    className={`w-full py-4 bg-white hover:bg-gray-200 text-black font-bold rounded-xl transition-all flex items-center justify-center gap-2 mt-4 shadow-lg active:scale-[0.98] ${status === 'sending' ? 'opacity-70 cursor-wait' : ''}`}
                    >
-                     <span>{status === 'sending' ? 'Preparing Email...' : 'Send Message'}</span>
-                     <Send size={18} className={status === 'sending' ? 'animate-pulse' : ''} />
+                     <span>{status === 'sending' ? 'Opening Email...' : 'Send Message'}</span>
+                     <Send size={18} className={status === 'sending' ? 'animate-bounce' : ''} />
                    </button>
                  </form>
               </div>
