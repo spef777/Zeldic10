@@ -55,7 +55,7 @@ const Header: React.FC = () => {
           aria-label="Zeldic Home"
         >
            <img 
-             src="logo.png" 
+             src="/logo.png" 
              alt="Zeldic Logo" 
              className="h-10 md:h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
            />
