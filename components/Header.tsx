@@ -47,23 +47,16 @@ const Header: React.FC = () => {
       }`}
     >
       <div className="container mx-auto px-6 flex items-center justify-between">
-        {/* Logo */}
+        {/* Logo Text Only */}
         <a 
           href="#home" 
           onClick={(e) => handleNavClick(e, '#home')}
-          className="flex items-center gap-3 group" 
+          className="flex items-center group" 
           aria-label="Zeldic Home"
         >
-           <img 
-             src="/logo.png" 
-             alt="Zeldic Logo" 
-             className="h-10 md:h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
-           />
-           <div className="flex items-center gap-2 font-bold text-xl md:text-2xl tracking-tighter">
-             <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-400">
-               ZELDIC
-             </span>
-           </div>
+           <span className="font-bold text-xl md:text-2xl tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-400 cursor-pointer">
+             ZELDIC
+           </span>
         </a>
 
         {/* Desktop Nav */}
