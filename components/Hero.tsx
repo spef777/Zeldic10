@@ -119,7 +119,7 @@ const Hero: React.FC = () => {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-8 md:pt-10">
             <a 
               href="tel:+916235448211"
-              className="w-full sm:w-auto px-10 py-4 bg-violet-600 hover:bg-violet-700 text-white rounded-full font-bold text-lg transition-all hover:shadow-[0_0_25px_rgba(124,58,237,0.6)] flex items-center justify-center gap-2 group"
+              className="w-full sm:w-auto px-10 py-4 bg-white/5 backdrop-blur-xl border border-violet-500 hover:bg-violet-600/20 hover:border-violet-400 text-white rounded-full font-bold text-lg transition-all shadow-[0_0_20px_rgba(124,58,237,0.3)] hover:shadow-[0_0_40px_rgba(124,58,237,0.6)] flex items-center justify-center gap-2 group"
             >
               Call Now
               <ArrowRight className="group-hover:translate-x-1 transition-transform" size={22} />
