@@ -26,16 +26,7 @@ const Header: React.FC = () => {
     const targetId = href.replace('#', '');
     const element = document.getElementById(targetId);
     if (element) {
-      const offset = 80; // Header height
-      const bodyRect = document.body.getBoundingClientRect().top;
-      const elementRect = element.getBoundingClientRect().top;
-      const elementPosition = elementRect - bodyRect;
-      const offsetPosition = elementPosition - offset;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
+      element.scrollIntoView({ behavior: 'smooth' });
     }
     setMobileMenuOpen(false);
   };
@@ -43,23 +34,26 @@ const Header: React.FC = () => {
   return (
     <header 
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? 'glass-header py-2' : 'bg-transparent py-4'
+        isScrolled ? 'glass-header py-3' : 'bg-transparent py-5'
       }`}
     >
       <div className="container mx-auto px-6 flex items-center justify-between">
         {/* Logo */}
-        <a 
-          href="#home" 
-          onClick={(e) => handleNavClick(e, '#home')}
-          className="flex items-center gap-3 group" 
-          aria-label="Zeldic Home"
-        >
+        <a href="#home" className="flex items-center gap-3 group" aria-label="Zeldic Home">
+           {/* 
+             INSTRUCTIONS: 
+             Upload your logo file as "logo.png" to the project root. 
+             If the file is missing, this image tag will hide itself.
+           */}
            <img 
              src="logo.png" 
              alt="Zeldic Logo" 
-             className="h-10 md:h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+             className="h-10 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+             onError={(e) => {
+               (e.target as HTMLImageElement).style.display = 'none';
+             }}
            />
-           <div className="flex items-center gap-2 font-bold text-xl md:text-2xl tracking-tighter">
+           <div className="flex items-center gap-2 font-bold text-2xl tracking-tighter">
              <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-400">
                ZELDIC
              </span>
@@ -94,32 +88,31 @@ const Header: React.FC = () => {
 
         {/* Mobile Menu Toggle */}
         <button 
-          className="md:hidden text-white p-2"
+          className="md:hidden text-white"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          aria-label="Toggle Menu"
         >
-          {mobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+          {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
 
       {/* Mobile Nav Dropdown */}
       {mobileMenuOpen && (
-        <div className="md:hidden absolute top-full left-0 right-0 glass-header border-t border-white/5 p-6 flex flex-col gap-6 animate-fade-in-down shadow-2xl">
+        <div className="md:hidden absolute top-full left-0 right-0 glass-header border-t border-white/5 p-4 flex flex-col gap-4 animate-fade-in-down">
           {navLinks.map((link) => (
             <a 
               key={link.name} 
               href={link.href}
               onClick={(e) => handleNavClick(e, link.href)}
-              className="text-gray-200 hover:text-violet-400 py-2 block text-center text-lg font-medium cursor-pointer"
+              className="text-gray-200 hover:text-violet-400 py-2 block text-center cursor-pointer"
             >
               {link.name}
             </a>
           ))}
            <a 
             href="tel:+916235448211"
-            className="flex items-center justify-center gap-2 px-5 py-4 bg-violet-600 rounded-xl text-white font-bold text-lg shadow-lg shadow-violet-600/20"
+            className="flex items-center justify-center gap-2 px-5 py-3 bg-violet-600 rounded-lg text-white font-bold"
           >
-            <Phone size={20} />
+            <Phone size={18} />
             Call Now
           </a>
         </div>
