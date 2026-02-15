@@ -10,8 +10,8 @@ export interface PricingPlan {
   price: number;
   duration: string;
   features: string[];
-  reachAd: string;
-  leadAd: string;
+  reachAd?: string;
+  leadAd?: string;
 }
 
 export interface ServiceItem {

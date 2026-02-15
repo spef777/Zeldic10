@@ -1,8 +1,12 @@
-import React, { useState } from 'react';
-import { Phone, Mail, Globe, Instagram, Facebook, MessageCircle, Send, CheckCircle2 } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Phone, Mail, Instagram, Facebook, MessageCircle, Send, CheckCircle2 } from 'lucide-react';
 import ScrollReveal from './ScrollReveal';
 
-const Contact: React.FC = () => {
+interface ContactProps {
+  autoFillData?: { service: string; message: string; timestamp: number } | null;
+}
+
+const Contact: React.FC<ContactProps> = ({ autoFillData }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -11,6 +15,28 @@ const Contact: React.FC = () => {
   });
   
   const [status, setStatus] = useState<'idle' | 'sending' | 'success'>('idle');
+  const formRef = useRef<HTMLFormElement>(null);
+
+  useEffect(() => {
+    if (autoFillData) {
+      setFormData(prev => ({
+        ...prev,
+        service: autoFillData.service,
+        message: autoFillData.message
+      }));
+
+      // Small delay to allow state update before attempting submit
+      // The browser will block submit and show validation error if Name/Email is missing,
+      // which effectively asks the user to fill those details.
+      const timer = setTimeout(() => {
+        if (formRef.current) {
+          formRef.current.requestSubmit();
+        }
+      }, 100);
+
+      return () => clearTimeout(timer);
+    }
+  }, [autoFillData]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -131,7 +157,7 @@ const Contact: React.FC = () => {
                      </button>
                    </div>
                  ) : (
-                   <form onSubmit={handleSubmit} className="space-y-6">
+                   <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
                      <div className="grid grid-cols-1 gap-6">
                        <div className="space-y-2">
                          <label className="text-xs font-bold text-gray-500 uppercase tracking-widest ml-1">Full Name</label>

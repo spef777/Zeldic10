@@ -4,7 +4,7 @@ import {
   Target, 
   Monitor, 
   Search, 
-  Megaphone, 
+  Smartphone, 
   PenTool, 
   Mail, 
   BarChart2 
@@ -34,9 +34,9 @@ const servicesList: ServiceItem[] = [
     description: "Search Engine Optimization to increase organic visibility and ranking."
   },
   {
-    title: "SEM",
-    icon: <Megaphone size={32} />,
-    description: "Search Engine Marketing campaigns that deliver instant, targeted traffic."
+    title: "App Development",
+    icon: <Smartphone size={32} />,
+    description: "Smart, scalable mobile apps built to perform beautifully and grow with your business"
   },
   {
     title: "Branding & Creative",
